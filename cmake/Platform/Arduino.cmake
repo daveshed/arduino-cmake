@@ -2135,12 +2135,37 @@ set(ARDUINO_AVRDUDE_FLAGS -V                              CACHE STRING "")
 #                          Initialization                                     
 #=============================================================================#
 if(NOT ARDUINO_FOUND AND ARDUINO_SDK_PATH)
-    register_hardware_platform(${ARDUINO_SDK_PATH}/hardware/arduino/)
+    register_hardware_platform(${ARDUINO_SDK_PATH}/hardware/arduino/avr)
 
     find_file(ARDUINO_LIBRARIES_PATH
         NAMES libraries
         PATHS ${ARDUINO_SDK_PATH}
+        PATH_SUFFIXES hardware/arduino/avr
         DOC "Path to directory containing the Arduino libraries.")
+
+    find_file(ARDUINO_CORES_PATH
+        NAMES arduino
+        PATHS ${ARDUINO_SDK_PATH}
+        PATH_SUFFIXES hardware/arduino/avr/cores
+        DOC "Path to arduino cores")
+
+    find_file(ARDUINO_BOOTLOADERS_PATH
+        NAMES bootloaders
+        PATHS ${ARDUINO_SDK_PATH}
+        PATH_SUFFIXES hardware/arduino/avr
+        DOC "Path to arduino bootloaders")
+
+    find_file(ARDUINO_BOARDS_PATH
+        NAMES boards.txt
+        PATHS ${ARDUINO_SDK_PATH}
+        PATH_SUFFIXES hardware/arduino/avr/
+        DOC "Path to arduino boards")
+
+    find_file(ARDUINO_PROGRAMMERS_PATH
+        NAMES programmers.txt
+        PATHS ${ARDUINO_SDK_PATH}
+        PATH_SUFFIXES hardware/arduino/avr/
+        DOC "Path to arduino programmers")
 
     find_file(ARDUINO_VERSION_PATH
         NAMES lib/version.txt
@@ -2209,9 +2234,6 @@ if(NOT ARDUINO_FOUND AND ARDUINO_SDK_PATH)
 
     setup_arduino_size_script(ARDUINO_SIZE_SCRIPT)
     set(ARDUINO_SIZE_SCRIPT ${ARDUINO_SIZE_SCRIPT} CACHE INTERNAL "Arduino Size Script")
-
-    #print_board_list()
-    #print_programmer_list()
 
     set(ARDUINO_FOUND True CACHE INTERNAL "Arduino Found")
     mark_as_advanced(
